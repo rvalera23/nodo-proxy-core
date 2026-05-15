@@ -5,7 +5,12 @@
   tasks:
     - name: FASE 1 - Instalar Docker y herramientas de red
       apt:
-        name: [docker.io, docker-compose-v2, python3-pip, curl, git]
+        name:
+          - docker.io
+          - docker-compose
+          - python3-pip
+          - curl
+          - git
         state: present
         update_cache: yes
 
@@ -24,13 +29,13 @@
     - name: FASE 5 - Lanzamiento del servicio
       shell: "cd /opt/servicios/nodo-proxy-core && docker compose up -d"
 
-      - name: FASE 6 - Ejecutar script de certificados locales
-      include_tasks: auto_certificados.yml
-
-    - name: FASE 7 - Asegurar permisos en carpetas SSL
+    - name: FASE 6 - Asegurar permisos en carpetas SSL
       file:
         path: "/opt/servicios/nodo-proxy-core/npm_letsencrypt"
         state: directory
-        owner: 1000
-        group: 1000
+        owner: "1000"
+        group: "1000"
         recurse: yes
+
+    - name: FASE 7 - Ejecutar script de certificados locales
+      include_tasks: auto_certificados.yml

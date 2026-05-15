@@ -1,0 +1,4 @@
+.env
+npm_data/
+npm_letsencrypt/
+certificados_locales/

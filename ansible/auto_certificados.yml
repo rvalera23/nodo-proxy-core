@@ -1,16 +1,13 @@
 ---
-- name: Generación de Certificados SSL de Larga Duración
-  hosts: all
-  tasks:
-    - name: Crear carpeta para certificados locales
-      file:
-        path: "/opt/servicios/nodo-proxy-core/certificados_locales"
-        state: directory
-        mode: '0755'
+- name: Crear carpeta para certificados locales
+  file:
+    path: "/opt/servicios/nodo-proxy-core/certificados_locales"
+    state: directory
+    mode: '0755'
 
-    - name: Generar llave privada y certificado (10 años)
-      shell: |
-        openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
-        -keyout /opt/servicios/nodo-proxy-core/certificados_locales/nodo_private.key \
-        -out /opt/servicios/nodo-proxy-core/certificados_locales/nodo_cert.crt \
-        -subj "/C=VE/ST=Miranda/L=Guarenas/O=NODO/CN=nodo.local"
+- name: Generar llave privada y certificado (10 años)
+  shell: |
+    openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
+    -keyout /opt/servicios/nodo-proxy-core/certificados_locales/nodo_private.key \
+    -out /opt/servicios/nodo-proxy-core/certificados_locales/nodo_cert.crt \
+    -subj "/C=VE/ST=Miranda/L=Guarenas/O=NODO/CN=nodo.local"
