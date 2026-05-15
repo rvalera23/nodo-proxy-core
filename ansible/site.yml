@@ -1,0 +1,35 @@
+---
+- name: Despliegue de Nodo Proxy Central
+  hosts: proxy_server
+  become: yes
+  tasks:
+    - name: FASE 1 - Instalar dependencias base
+      apt:
+        name: [curl, git, gnupg, python3-pip]
+        state: present
+        update_cache: yes
+
+    - name: FASE 1.1 - Instalación de Docker
+      shell: curl -sSL https://get.docker.com | sh
+      args:
+        creates: /usr/bin/docker
+
+    - name: FASE 3 - Crear carpetas de persistencia para Proxy
+      file:
+        path: "/opt/servicios/{{ item }}"
+        state: directory
+        mode: '0755'
+      with_items:
+        - 'npm_data'
+        - 'npm_letsencrypt'
+
+    - name: FASE 4.2 - Descarga de imagen Nginx Proxy Manager
+      shell: "docker pull jc21/nginx-proxy-manager:latest"
+
+    - name: Copiar Docker Compose al servidor
+      copy:
+        src: ../docker-compose.yml
+        dest: /opt/servicios/docker-compose.yml
+
+    - name: FASE 5 - Lanzamiento del Proxy
+      shell: "cd /opt/servicios && docker compose up -d"
