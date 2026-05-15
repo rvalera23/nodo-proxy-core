@@ -1,0 +1,31 @@
+---
+- name: Automatizar Certificados SSL
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Crear carpeta SSL si no existe
+      file:
+        path: /opt/servicios/ssl
+        state: directory
+        mode: '0755'
+
+    - name: Generar llave privada (privkey.pem)
+      community.crypto.openssl_privatekey:
+        path: /opt/servicios/ssl/privkey.pem
+        size: 4096
+        mode: '0644'
+
+    - name: Generar CSR (Solicitud de firma)
+      community.crypto.openssl_csr:
+        path: /opt/servicios/ssl/vault.csr
+        privatekey_path: /opt/servicios/ssl/privkey.pem
+        common_name: "infra.local"
+
+    - name: Generar certificado autofirmado (fullchain.pem)
+      community.crypto.x509_certificate:
+        path: /opt/servicios/ssl/fullchain.pem
+        privatekey_path: /opt/servicios/ssl/privkey.pem
+        csr_path: /opt/servicios/ssl/vault.csr
+        provider: selfsigned
+        selfsigned_not_after: "+3650d"  # Válido por 10 años
+        mode: '0644'
