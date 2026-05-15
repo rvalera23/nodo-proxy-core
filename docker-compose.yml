@@ -5,12 +5,12 @@ services:
     container_name: nodo_proxy_manager
     restart: unless-stopped
     ports:
-      - '80:80'
-      - '81:81'
-      - '443:443'
+      - '80:80'   # HTTP
+      - '81:81'   # Panel de Administración
+      - '443:443' # HTTPS
     volumes:
-      - ../npm_data:/data
-      - ../npm_letsencrypt:/etc/letsencrypt
+      - ./npm_data:/data
+      - ./npm_letsencrypt:/etc/letsencrypt
 
 networks:
   default:
